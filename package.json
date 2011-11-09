@@ -1,33 +1,31 @@
 {
-    "name": "samurai",
-    "description": "Samurai payment gateway API client library for Node.js",
-    "version": "0.1.5",
-    "author" : "FeeFighters <samurai@feefighters.com>",
-    "maintainers":[
-        {
-            "name":"FeeFighters",
-            "email":"samurai@feefighters.com"
-        }
-    ],
-    "homepage": "https://samurai.feefighters.com/",
-    "repository" : {
-        "type" : "git",
-        "url" : "https://github.com/FeeFighters/samurai-client-nodejs.git"
-    },
-    "main" : "./lib/samurai",
-    "licenses" : [
-        {
-            "type": "MIT",
-            "url": "https://github.com/FeeFighters/samurai-client-nodejs/blob/master/LICENSE"
-        }
-    ],
-    "dependencies": { 
-        "mersenne": ">= 0.0.3"
-    },
-    "devDependencies": {
-        "nodeunit": ">= 0.4.0",
-        "uglify-js": ">= 1.0.1"
-    },
-    "engine": [ "node >=0.4.0" ],
-    "keywords": ["payment gateway", "payment processing", "samurai", "feefighters"]
+  "name":        "samurai",
+  "description": "Samurai payment gateway API client library for Node.js",
+  "version":     "0.2.0",
+  "author":      "FeeFighters <samurai@feefighters.com>",
+  "maintainers": [
+    {
+      "name":  "FeeFighters",
+      "email": "samurai@feefighters.com"
+    }
+  ],
+  "homepage":   "https : //samurai.feefighters.com/",
+  "repository": {
+    "type": "git",
+    "url":  "https://github.com/FeeFighters/samurai-client-nodejs.git"
+  },
+  "main":     "./index.js",
+  "licenses": [
+    {
+      "type": "MIT",
+      "url":  "https : //github.com/FeeFighters/samurai-client-nodejs/blob/master/LICENSE"
+    }
+  ],
+  "dependencies": { 
+  },
+  "devDependencies": {
+    "nodeunit":  ">= 0.4.0"
+  },
+  "engine":   [ "node >=0.4.0" ],
+  "keywords": ["payment gateway", "payment processing", "samurai", "feefighters"]
 }
