@@ -1,8 +1,11 @@
+# Copies the properties `properties` to a receiver object `object`.
 extend = exports.extend = (object, properties) ->
   for key, val of properties
     object[key] = val
   object
    
+# Returns a new object, containing the properties from `options` merged
+# with the ones from `overrides`.
 exports.merge = (options, overrides) ->
   extend (extend {}, options), overrides
 

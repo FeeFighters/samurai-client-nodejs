@@ -2,6 +2,8 @@
 {get, post, put} = require './connection'
 Message          = require './message'
 
+# The PaymentMethod class lets you create, update, retain and redact 
+# payment methods.
 class PaymentMethod
   KNOWN_ATTRIBUTES = [
     'first_name',
@@ -19,17 +21,33 @@ class PaymentMethod
   ]
 
   # -- Class Methods --
+  #
+  # Creates a new payment method and passes it to the callback function.
+  # Parameters:
+  #   * `attributes`: An object containing the personal and
+  #   credit card information you want stored with this new payment
+  #   method.
+  #   * `callback`: A function that accepts two parameters: (err,
+  #   paymentMethod). The `err` parameter contains the HTTP error that
+  #   occurred while attempting to create the payment method. The second
+  #   `paymentMethod` passes the same object that will be returned from
+  #   `PaymentMethod.create()` and is there just for convenience.
   @create: (attributes = {}, callback) ->
     paymentMethod = new PaymentMethod(attributes)
     paymentMethod.save(callback)
     paymentMethod
 
+  # Retrieves the payment method identified by `token`.
   @find: (token, callback) ->
     paymentMethod = new PaymentMethod(payment_method_token: token)
     get paymentMethod.pathFor('show'), null, (err, response) ->
       paymentMethod.updateAttributes(response.payment_method)
       callback?(err, paymentMethod)
+    paymentMethod
 
+  # Creates a new payment method object, but does not save it to the
+  # Samurai servers. Use the `save()` method on the returned payment method
+  # object to save it.
   constructor: (@attributes = {}) ->
     @isNew = if @attributes.payment_method_token? then false else true
     @errors = {}
@@ -46,6 +64,9 @@ class PaymentMethod
   redact: (callback) ->
     post @pathFor('redact'), null, @createResponseHandler(callback)
 
+  # Saves the payment method to the Samurai servers if this is a new
+  # payment method, or updates the information for an existing payment
+  # method.
   save: (callback) ->
     if @isNew
       post @pathFor('create'), { payment_method: @sanitizedAttributes() }, @createResponseHandler((err, pm) => @isNew = false; callback?(err, pm))
@@ -53,11 +74,18 @@ class PaymentMethod
       put  @pathFor('update'), { payment_method: @sanitizedAttributes() }, @createResponseHandler(callback)
 
   # -- Helpers --
+  
+  # Makes sure that the payment method attributes we send to the Samurai API are part
+  # of the KNOWN_ATTRIBUTES array.
   sanitizedAttributes: ->
     attr = {}
     attr[key] = val for key, val of @attributes when KNOWN_ATTRIBUTES.indexOf(key) > -1
     attr
 
+  # Creates a response handler that parses the Samurai response for
+  # messages (info or error) and updates the current payment method's
+  # information. Then, the response handler passes the HTTP error object
+  # and the current payment method object to the `callback`.
   createResponseHandler: (callback) ->
     (err, response) =>
       if err
@@ -69,6 +97,7 @@ class PaymentMethod
 
       callback?(err, this)
 
+  # Returns the API endpoint that should be used for `method`.
   pathFor: (method) ->
     root = 'payment_methods'
     switch method
@@ -81,11 +110,15 @@ class PaymentMethod
       else
         root + '/' + @token() + '/' + method + '.xml'
 
+  # Updates the `attributes` object with newly returned information.
   updateAttributes: (attributes) ->
     extend(@attributes, attributes)
 
+  # Finds all messages returned in a Samurai response, regardless of
+  # what part of the response they were in.
   extractMessagesFromResponse: (response) ->
     messages = []
+
     extr = (hash) ->
       for own key, value of hash
         if key is 'messages'
@@ -100,6 +133,9 @@ class PaymentMethod
     messages = for m in messages
       if m.message then m.message else m
 
+  # Finds message blocks in the Samurai response, creates a `Message`
+  # object for each one and stores them in either the `messages` or the
+  # `errors` object, depending on the message type.
   processResponseMessages: (response) ->
     # find messages array
     messages = @extractMessagesFromResponse(response)

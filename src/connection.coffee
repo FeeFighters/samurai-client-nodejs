@@ -13,6 +13,16 @@ module.exports = do ->
   config =
     site: 'https://api.samurai.feefighters.com/v1/'
 
+  # Sets up the default connection parameters for all requests to the Samurai API.
+  # Parameters are passed in a single object. The available parameters are:
+  #
+  #   * `merchant_key`: Your merchant key. Required.
+  #   * `merchant_password`: Your merchant password. Required.
+  #   * `processor_token`: Your default processor token. Optional.
+  #   * `site`: Root URL to Samurai's API. Default: https://api.samurai.feefighters.com/v1/
+  #   * `sandbox`: Tells samurai to include the sandbox=true parameter with all requests, 
+  #     so you can execute tests on the sandbox processor. Default: false
+  #
   setup = (c = {}) ->
     extend(config, c)
 
@@ -25,6 +35,7 @@ module.exports = do ->
     authHeader = (new Buffer(config.merchant_key + ':' + config.merchant_password)).toString('base64')
     defaultData.sandbox = true if config.sandbox
 
+  # Returns an error object, corresponding to the HTTP status code returned by Samurai.
   errorFromStatus = (status) ->
     switch status.toString()
       when '200' then null
@@ -37,6 +48,8 @@ module.exports = do ->
       when '503' then errors.DownForMaintenanceError()
       else errors.UnexpectedError('Unexpected HTTP response: ' + status)
 
+  # Creates a response handler, which parses the Samurai response, checks it for errors 
+  # and then passes the results to `callback`.
   handleResponse = (callback, r) ->
     (res) ->
       body = ''
@@ -68,6 +81,10 @@ module.exports = do ->
 
         callback?(err, response)
 
+  # Performs a GET/POST/PUT request to the Samurai API, parses the returned response
+  # and then passes it to `callback`. The `data` object will be automatically flattened
+  # (i.e. obj: { key: value } will be turned to obj[key]=value) and converted to 
+  # query string form.
   request = (method, path, data, callback) ->
     options =
       host: config.host
@@ -88,12 +105,15 @@ module.exports = do ->
     req.write(data) if data?
     req.end()
 
+  # Convenience method for making GET requests.
   get = (path, data, callback) ->
     request('GET', path, data, callback)
 
+  # Convenience method for making POST requests.
   post = (path, data, callback) ->
     request('POST', path, data, callback)
 
+  # Convenience method for making PUT requests.
   put = (path, data, callback) ->
     request('PUT', path, data, callback)
 

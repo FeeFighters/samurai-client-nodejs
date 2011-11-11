@@ -10,4 +10,4 @@ module.exports =
   Transaction:    Transaction
   Processor:      Processor
   Message:        Message
-  setupSite:      Connection.setup
+  setup:          Connection.setup

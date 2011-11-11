@@ -2,7 +2,7 @@ https = require 'https'
 querystring = require 'querystring'
 samurai = require('../..')
 
-samurai.setupSite
+samurai.setup
   sandbox:           true
   site:              process.env['SITE']              || 'https://api.samurai.feefighters.com/v1/',
   merchant_key:      process.env['MERCHANT_KEY']      || 'a1ebafb6da5238fb8a3ac9f6',
