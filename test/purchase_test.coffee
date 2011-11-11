@@ -41,8 +41,8 @@ vows
           transaction.credit(this.callback)
         return
 
-      'the processor response should not be successful': (err, transaction) ->
-        assert.equal transaction.isSuccess(), false
+      'the processor response should be successful': (err, transaction) ->
+        assert.equal transaction.isSuccess(), true
 
     'When a recent transaction is reversed':
       topic: ->
