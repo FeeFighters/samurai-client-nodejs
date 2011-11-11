@@ -22,9 +22,13 @@
     }
   ],
   "dependencies": { 
+    "coffee-script":  "1.x.x",
+    "colors":         "0.5.x",
+    "node-expat":     "1.4.x",
+    "xml2json":       "0.2.x"
   },
   "devDependencies": {
-    "nodeunit":  ">= 0.4.0"
+    "vows":  "0.5.x"
   },
   "engine":   [ "node >=0.4.0" ],
   "keywords": ["payment gateway", "payment processing", "samurai", "feefighters"]
