@@ -1,35 +1,42 @@
-{
-  "name":        "samurai",
-  "description": "Samurai payment gateway API client library for Node.js",
-  "version":     "0.2.0",
-  "author":      "FeeFighters <samurai@feefighters.com>",
-  "maintainers": [
-    {
-      "name":  "FeeFighters",
-      "email": "samurai@feefighters.com"
+{ "name":        "samurai"
+, "description": "Samurai payment gateway API client module for Node.js"
+, "version":     "0.2.0"
+, "author":      "FeeFighters <samurai@feefighters.com>"
+, "homepage":    "https://samurai.feefighters.com"
+, "repository": 
+  { "type": "git"
+  , "url":  "https://github.com/FeeFighters/samurai-client-nodejs.git"
+  }
+, "bugs":
+  { "url" : "https://github.com/FeeFighters/samurai-client-nodejs/issues"
+  , "email" : "samurai@feefighters.com"
+  }
+, "maintainers":
+  [ { "name" : "Tisho Georgiev"
+    , "email" : "tisho@feefighters.com"
     }
-  ],
-  "homepage":   "https : //samurai.feefighters.com/",
-  "repository": {
-    "type": "git",
-    "url":  "https://github.com/FeeFighters/samurai-client-nodejs.git"
-  },
-  "main":     "./index.js",
-  "licenses": [
-    {
-      "type": "MIT",
-      "url":  "https : //github.com/FeeFighters/samurai-client-nodejs/blob/master/LICENSE"
+  , { "name" : "Joshua Krall"
+    , "email" : "josh@feefighters.com"
     }
-  ],
-  "dependencies": { 
-    "coffee-script":  "1.x.x",
-    "colors":         "0.5.x",
-    "node-expat":     "1.4.x",
-    "xml2json":       "0.2.x"
-  },
-  "devDependencies": {
-    "vows":  "0.5.x"
-  },
-  "engine":   [ "node >=0.4.0" ],
-  "keywords": ["payment gateway", "payment processing", "samurai", "feefighters"]
+  ]
+, "main":     "./index.js"
+, "licenses": 
+  [ { "type": "MIT"
+    , "url":  "https://github.com/FeeFighters/samurai-client-nodejs/blob/master/LICENSE"
+    }
+  ]
+, "dependencies": 
+  { "coffee-script":  "1.x.x"
+  , "colors":         "0.5.x"
+  , "node-expat":     "1.4.x"
+  , "xml2json":       "0.2.x"
+  }
+, "devDependencies": 
+  { "vows":  "0.5.x" }
+, "engines" : { "node" : ">=0.4.1" }
+, "keywords": ["payments", "payment gateway", "payment processing", "samurai", "feefighters"]
+, "scripts": 
+  { "test": "cake test"
+  , "prepublish": "cake build"
+  }
 }

@@ -1,19 +1,36 @@
-{extend}         = require './helpers'
-{get, post, put} = require './connection'
-Message          = require './message'
+Message = require './message'
+
+{ extend
+, camelize
+} = require './helpers'
+
+{ get
+, post
+, put
+} = require './connection'
 
 # This class represents a Samurai Transaction
 # It can be used to query Transactions & capture/void/credit/reverse
 class Transaction
-  KNOWN_ATTRIBUTES = [
-    'amount',             'type',              'payment_method_token',
-    'currency_code',      'descriptor',        'custom',
-    'customer_reference', 'billing_reference', 'processor_response'
-  ]
+  KNOWN_ATTRIBUTES =
+    [  'amount'
+    ,  'type'
+    ,  'payment_method_token'
+    ,  'currency_code'
+    ,  'descriptor'
+    ,  'custom'
+    ,  'customer_reference'
+    ,  'billing_reference'
+    ]
 
   # -- Class Methods --
+
+  # Find the transaction, identified by `referenceId` and then passes it
+  # as a second argument to `callback`. Note that the reference id of a
+  # transaction isn't the same as the transaction token. When trying to
+  # fetch a transaction, always use its reference id.
   @find: (referenceId, callback) ->
-    transaction = new Transaction(transaction_token: referenceId)
+    transaction = new Transaction(reference_id: referenceId)
     get transaction.pathFor('show'), null, (err, response) ->
       transaction.updateAttributes(response.transaction)
       callback?(err, transaction)
@@ -21,6 +38,7 @@ class Transaction
   constructor: (@attributes={}) ->
     @errors = {}
     @messages = {}
+    @createAttrAliases()
 
   # -- Methods --
 
@@ -42,6 +60,15 @@ class Transaction
 
   # Void this transaction. If the transaction has not yet been captured and settled it can be voided to 
   # prevent any funds from transferring.
+  # The `options` parameter is optional and can be replaced by the
+  # `callback` parameter. For example:
+  #   
+  #   myTransaction.void(null, myCallback);
+  #
+  # can be written as:
+  #
+  #   myTransaction.void(myCallback);
+  #
   void: (options={}, callback) ->
     if typeof options is 'function'
       callback = options
@@ -51,7 +78,18 @@ class Transaction
 
   # Create a credit or refund against the original transaction.
   # Optionally accepts an `amount` to credit, the default is to credit the full
-  # value of the original amount
+  # value of the original amount.
+  # The `amount` and `options` parameters are optional. By the default,
+  # the `amount` is the full amount specified in the original
+  # transaction. If you choose to skip one of these parameters, you can
+  # put the `callback` parameter in their place. For example:
+  #
+  #   myTransaction.credit(null, null, myCallback);
+  #
+  # could be written as:
+  #
+  #   myTransaction.credit(myCallback);
+  #
   credit: (amount, options={}, callback) ->
     if typeof amount is 'function'
       callback = amount
@@ -68,6 +106,17 @@ class Transaction
 
   # Reverse this transaction.  First, tries a void.
   # If a void is unsuccessful, (because the transaction has already settled) perform a credit for the full amount.
+  # The `amount` and `options` parameters are optional. By the default,
+  # the `amount` is the full amount specified in the original
+  # transaction. If you choose to skip one of these parameters, you can
+  # put the `callback` parameter in their place. For example:
+  #
+  #   myTransaction.reverse(null, null, myCallback);
+  #
+  # could be written as:
+  #
+  #   myTransaction.reverse(myCallback);
+  #
   reverse: (amount, options={}, callback) ->
     if typeof amount is 'function'
       callback = amount
@@ -89,6 +138,10 @@ class Transaction
   isFailed: ->
     return !@isSuccess()
 
+  # Creates a response handler that parses the Samurai response for
+  # messages (info or error) and updates the current transaction's
+  # information. Then, the response handler passes the HTTP error object
+  # and the current transaction object to the `callback`.
   createResponseHandler: (callback) ->
     (err, response) =>
       if err
@@ -100,15 +153,17 @@ class Transaction
 
       callback?(err, this)
 
+  # Returns the API endpoint that should be used for `method`.
   pathFor: (method) ->
     root = 'transactions'
 
     switch method
       when 'show'
-        root + '/' + @token() + '.xml'
+        root + '/' + @attributes.reference_id + '.xml'
       else
-        root + '/' + @token() + '/' + method + '.xml'
+        root + '/' + @token + '/' + method + '.xml'
 
+  # Updates the `attributes` object with newly returned information.
   updateAttributes: (attributes) ->
     # sometimes the returned transaction would not have all of the
     # original transaction's data, so this makes sure we don't
@@ -117,8 +172,25 @@ class Transaction
       unless attr of @attributes and value is ''
         @attributes[attr] = value
 
-    @attributes
+    # Defined accessors for camelized versions of attributes.
+    # E.g.: `obj.attributes.first_name` can be accessed from `obj.firstName`.
+    @defineAttrAccessor(prop) for prop of @attributes when prop not of this
 
+  # Defines an accessor for the property `prop` of the internal
+  # `attributes` object. Setter are only defined for properties that are
+  # part of the `KNOWN_ATTRIBUTES` array.
+  defineAttrAccessor: (prop) ->
+    @defineAttrGetter(prop) unless this.__lookupGetter__(camelize(prop))
+    @defineAttrSetter(prop) unless this.__lookupSetter__(camelize(prop)) or KNOWN_ATTRIBUTES.indexOf(prop) is -1
+
+  defineAttrGetter: (prop) ->
+    this.__defineGetter__ camelize(prop), -> @attributes[prop]
+
+  defineAttrSetter: (prop) ->
+    this.__defineSetter__ camelize(prop), (value) -> @attributes[prop] = value
+
+  # Finds all messages returned in a Samurai response, regardless of
+  # what part of the response they were in.
   extractMessagesFromResponse: (response) ->
     messages = []
     extr = (hash) ->
@@ -135,6 +207,9 @@ class Transaction
     messages = for m in messages
       if m.message then m.message else m
 
+  # Finds message blocks in the Samurai response, creates a `Message`
+  # object for each one and stores them in either the `messages` or the
+  # `errors` object, depending on the message type.
   processResponseMessages: (response) ->
     # find messages array
     messages = @extractMessagesFromResponse(response)
@@ -157,6 +232,7 @@ class Transaction
           @messages[message.context] = [m]
 
   # -- Accessors --
-  token: -> @attributes.transaction_token
+  createAttrAliases: ->
+    this.__defineGetter__ 'token', -> @attributes.transaction_token
   
 module.exports = Transaction

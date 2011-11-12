@@ -1,11 +1,12 @@
 vows   = require 'vows'
 assert = require 'assert'
 util   = require 'util'
-{ PaymentMethod,
-  Processor,
-  Transaction,
-  Connection,
-  createTestPaymentMethod } = require './support/test_helper'
+{ PaymentMethod
+, Processor
+, Transaction
+, Connection
+, createTestPaymentMethod
+} = require './support/test_helper'
 
 createTestPurchase = (amount, callback) ->
   createTestPaymentMethod (token) ->

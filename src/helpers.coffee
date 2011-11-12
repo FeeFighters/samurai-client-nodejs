@@ -6,7 +6,7 @@ extend = exports.extend = (object, properties) ->
    
 # Returns a new object, containing the properties from `options` merged
 # with the ones from `overrides`.
-exports.merge = (options, overrides) ->
+merge = exports.merge = (options, overrides) ->
   extend (extend {}, options), overrides
 
 # Flattens first level of nested objects for easier conversion to query strings.
@@ -22,3 +22,13 @@ flattenObject = exports.flattenObject = (object) ->
       object["#{key}[#{key2}]"] = if typeof val2 is 'object' then JSON.stringify(val2) else val2
 
   object
+
+# Converts a string to camelCase notation.
+# E.g.: 'camel_case_string' -> 'camelCasedString'
+camelize = exports.camelize = (string) ->
+  string.replace(/([\-\_][a-z0-9])/g, (match) -> match.toUpperCase().replace('-','').replace('_',''))
+
+# Converts a string to underscore notation.
+# E.g.: 'camelCasedString' -> 'camel_case_string'
+underscore = exports.underscore = (string) ->
+  string.replace(/([A-Z])/g, (match) -> "_" + match.toLowerCase())

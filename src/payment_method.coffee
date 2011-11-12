@@ -1,24 +1,33 @@
-{extend}         = require './helpers'
-{get, post, put} = require './connection'
-Message          = require './message'
+Message  = require './message'
+
+{ extend
+, camelize
+} = require './helpers'
+
+{ get
+, post
+, put
+, config
+} = require './connection'
 
 # The PaymentMethod class lets you create, update, retain and redact 
 # payment methods.
 class PaymentMethod
-  KNOWN_ATTRIBUTES = [
-    'first_name',
-    'last_name',
-    'address_1',
-    'address_2',
-    'city',
-    'state',
-    'zip',
-    'card_number',
-    'cvv',
-    'expiry_month',
-    'expiry_year',
-    'custom'
-  ]
+  KNOWN_ATTRIBUTES =
+    [  'first_name'
+    ,  'last_name'
+    ,  'address_1'
+    ,  'address_2'
+    ,  'city'
+    ,  'state'
+    ,  'zip'
+    ,  'card_number'
+    ,  'cvv'
+    ,  'expiry_month'
+    ,  'expiry_year'
+    ,  'custom'
+    ,  'sandbox'
+    ]
 
   # -- Class Methods --
   #
@@ -49,9 +58,12 @@ class PaymentMethod
   # Samurai servers. Use the `save()` method on the returned payment method
   # object to save it.
   constructor: (@attributes = {}) ->
+    extend(@attributes, sandbox: true) if config.sandbox
+      
     @isNew = if @attributes.payment_method_token? then false else true
     @errors = {}
     @messages = {}
+    @createAttrAliases()
 
   # -- Methods --
 
@@ -104,15 +116,32 @@ class PaymentMethod
       when 'create'
         root + '.json'
       when 'update'
-        root + '/' + @token() + '.json'
+        root + '/' + @token + '.json'
       when 'show'
-        root + '/' + @token() + '.xml'
+        root + '/' + @token + '.xml'
       else
-        root + '/' + @token() + '/' + method + '.xml'
+        root + '/' + @token + '/' + method + '.xml'
 
   # Updates the `attributes` object with newly returned information.
   updateAttributes: (attributes) ->
     extend(@attributes, attributes)
+    
+    # Defined accessors for camelized versions of attributes.
+    # E.g.: `obj.attributes.first_name` can be accessed from `obj.firstName`.
+    @defineAttrAccessor(prop) for prop of @attributes when prop not of this
+
+  # Defines an accessor for the property `prop` of the internal
+  # `attributes` object. Setter are only defined for properties that are
+  # part of the `KNOWN_ATTRIBUTES` array.
+  defineAttrAccessor: (prop) ->
+    @defineAttrGetter(prop) unless this.__lookupGetter__(camelize(prop))
+    @defineAttrSetter(prop) unless this.__lookupSetter__(camelize(prop)) or KNOWN_ATTRIBUTES.indexOf(prop) is -1
+
+  defineAttrGetter: (prop) ->
+    this.__defineGetter__ camelize(prop), -> @attributes[prop]
+
+  defineAttrSetter: (prop) ->
+    this.__defineSetter__ camelize(prop), (value) -> @attributes[prop] = value
 
   # Finds all messages returned in a Samurai response, regardless of
   # what part of the response they were in.
@@ -159,18 +188,19 @@ class PaymentMethod
   
   # -- Accessors --
 
-  # Alias for `attributes.payment_method_token`
-  token: -> @attributes.payment_method_token
+  createAttrAliases: ->
+    # Alias for `attributes.payment_method_token`
+    this.__defineGetter__ 'token', -> @attributes.payment_method_token
 
-  # Retrieves JSON formatted custom data that is encoded in the custom_data attribute
-  customJSONData: ->
-    data = {}
-    if @attributes.custom?
-      try
-        data = JSON.parse(@attributes.custom)
-      catch error
-        data = {}
-    data
+    # Retrieves JSON formatted custom data that is encoded in the custom_data attribute
+    this.__defineGetter__ 'customJsonData', ->
+      data = {}
+      if @attributes.custom?
+        try
+          data = JSON.parse(@attributes.custom)
+        catch error
+          data = {}
+      data
 
 module.exports =
   create: PaymentMethod.create

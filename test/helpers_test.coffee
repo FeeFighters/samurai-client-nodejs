@@ -1,6 +1,10 @@
 vows                    = require 'vows'
 assert                  = require 'assert'
-{extend, flattenObject} = require '../lib/helpers'
+{ extend
+, flattenObject
+, camelize
+, underscore
+} = require '../lib/helpers'
 
 vows
   .describe('Helpers')
@@ -35,5 +39,17 @@ vows
 
       'and deeply nested objects should be converted to JSON': (topic) ->
         assert.equal topic['credit_card[custom]'], '{"id":5}'
+
+    'when we use underscore()':
+      topic: -> underscore 'camelCasedString'
+
+      'a camelCased string should be converted to underscore notation': (topic) ->
+        assert.equal topic, 'camel_cased_string'
+
+    'when we use camelize()':
+      topic: -> camelize 'camel_cased_string'
+
+      'an underscored string should be converted to camelCase notation': (topic) ->
+        assert.equal topic, 'camelCasedString'
 
   .export(module)

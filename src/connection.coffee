@@ -20,8 +20,8 @@ module.exports = do ->
   #   * `merchant_password`: Your merchant password. Required.
   #   * `processor_token`: Your default processor token. Optional.
   #   * `site`: Root URL to Samurai's API. Default: https://api.samurai.feefighters.com/v1/
-  #   * `sandbox`: Tells samurai to include the sandbox=true parameter with all requests, 
-  #     so you can execute tests on the sandbox processor. Default: false
+  #   * `sandbox`: Tells samurai to include the sandbox=true parameter with payment method requests, 
+  #     so you can execute tests with these payment methods on the sandbox processor. Default: false
   #
   setup = (c = {}) ->
     extend(config, c)
@@ -33,7 +33,6 @@ module.exports = do ->
     config.path ?= parsedUrl.pathname
 
     authHeader = (new Buffer(config.merchant_key + ':' + config.merchant_password)).toString('base64')
-    defaultData.sandbox = true if config.sandbox
 
   # Returns an error object, corresponding to the HTTP status code returned by Samurai.
   errorFromStatus = (status) ->

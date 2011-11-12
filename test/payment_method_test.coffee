@@ -28,9 +28,23 @@ vows
         return
           
       'it should contain a 24-character long string token': (err, paymentMethod) ->
-        token = paymentMethod.token()
+        token = paymentMethod.token
         assert.isString token
         assert.equal token.length, 24
+
+      'we should be able to read its properties as normal object properties': (err, paymentMethod) ->
+        assert.equal paymentMethod.firstName, 'sean'
+        assert.equal paymentMethod.lastName, 'harper'
+
+      'we should be able to set its properties as normal object properties':
+        topic: (paymentMethod) ->
+          paymentMethod.firstName = 'John'
+          paymentMethod.lastName = 'Smith'
+          paymentMethod
+        
+        'and the corresponding entries in the attributes object should update': (paymentMethod) ->
+          assert.equal paymentMethod.firstName, 'John'
+          assert.equal paymentMethod.lastName, 'Smith'
 
       'and we retain it':
         topic: (paymentMethod) ->
@@ -61,13 +75,13 @@ vows
 
       'and we then try to find() it on the server':
         topic: (paymentMethod) ->
-          PaymentMethod.find(paymentMethod.token(), this.callback)
+          PaymentMethod.find(paymentMethod.token, this.callback)
           return
 
         'the server should return the same payment method': (err, paymentMethod) ->
-          assert.isNotNull paymentMethod.token()
+          assert.isNotNull paymentMethod.token
 
         'the payment method should hold unserialized custom data': (err, paymentMethod) ->
-          assert.deepEqual paymentMethod.customJSONData(), { id: 5, reference: 'foo' }
+          assert.deepEqual paymentMethod.customJsonData, { id: 5, reference: 'foo' }
 
   .export(module)
