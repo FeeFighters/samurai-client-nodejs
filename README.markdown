@@ -15,7 +15,7 @@ Install Samurai just like any other node module, using `npm`:
 
 Then require the `samurai` module into your app:
 
-    var Samurai = require('samurai')
+    var samurai = require('samurai')
 
 
 Configuration
@@ -32,8 +32,8 @@ as a parameter. Here's an example:
     });
 
 The `processor_token` param is optional. If you set it,
-`Samurai.Processor.the_processor` will return the processor with this token. You
-can always call `Samurai.Processor.find('an_arbitrary_processor_token')` to
+`samurai.Processor.the_processor` will return the processor with this token. You
+can always call `samurai.Processor.find('an_arbitrary_processor_token')` to
 retrieve any of your processors.
 
 

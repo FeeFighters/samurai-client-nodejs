@@ -1,11 +1,14 @@
 parser = require 'xml2json'
 util = require 'util'
 
+# Returns true if an object is empty.
 isEmptyObject = (object) ->
   for own k, v of object
     return false
   return true
 
+# Converts values from a Samurai response to the appropriate native
+# javascript type, based on their `type` attribute in the XML.
 normalize = (object) ->
   for own k, v of object
     if typeof v is 'object' and v not instanceof Array
@@ -37,5 +40,6 @@ normalize = (object) ->
       object[k] = v
   object
 
+# Converts a Samurai XML response to a javascript object.
 module.exports.parse = (string) ->
   normalize(JSON.parse(parser.toJson(string)))
