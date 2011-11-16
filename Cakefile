@@ -20,13 +20,13 @@ task 'watch', 'Recompile CoffeeScript source files when modified', ->
   build true
 
 task 'test', 'Run vows specs', ->
-  exec 'vows --spec test/*.coffee',
+  exec 'node_modules/vows/bin/vows --spec test/*.coffee',
 		(err, stdout, stderr) ->
 			print stdout if stdout?
 			print stderr if stderr?
 
 task 'test-ci', 'Run vows specs in CI', ->
-  exec 'vows --xunit test/*.coffee > results.xml',
+  exec 'node_modules/vows/bin/vows --xunit test/*.coffee > results.xml',
 		(err, stdout, stderr) ->
 			print stdout if stdout?
 			print stderr if stderr?
