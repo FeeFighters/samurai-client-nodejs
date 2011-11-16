@@ -24,3 +24,9 @@ task 'test', 'Run vows specs', ->
 		(err, stdout, stderr) ->
 			print stdout if stdout?
 			print stderr if stderr?
+
+task 'test-ci', 'Run vows specs in CI', ->
+  exec 'vows --xunit test/*.coffee > results.xml',
+		(err, stdout, stderr) ->
+			print stdout if stdout?
+			print stderr if stderr?
