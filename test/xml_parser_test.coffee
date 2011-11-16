@@ -37,8 +37,8 @@ sampleSamuraiXML = """
 sampleSamuraiJSON =
   payment_method:
     payment_method_token: '2a492618486f55b73d06ed8b',
-    created_at: '2011-11-06T15:05:43Z',
-    updated_at: '2011-11-06T15:05:43Z',
+    created_at: '2011-11-06T15:05:43.000Z',
+    updated_at: '2011-11-06T15:05:43.000Z',
     custom: '',
     is_retained: true,
     is_redacted: false,
@@ -69,8 +69,8 @@ vows
   .addBatch
     'when parsing a sample samurai XML response':
       topic: ->
-        xml.parse(sampleSamuraiXML)
+        JSON.stringify xml.parse(sampleSamuraiXML)
 
       'the result will be equivalent to the same JSON response': (topic) ->
-        assert.equal topic, sampleSamuraiJSON
+        assert.equal topic, JSON.stringify(sampleSamuraiJSON)
   .export(module)
