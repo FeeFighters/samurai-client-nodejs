@@ -234,5 +234,12 @@ class Transaction
   # -- Accessors --
   createAttrAliases: ->
     this.__defineGetter__ 'token', -> @attributes.transaction_token
+    this.__defineGetter__ 'avsResultCode', ->
+      messages = @messages['processor.avs_result_code'] or @messages['gateway.avs_result_code']
+      messages[0].key if messages and messages[0]
+
+    this.__defineGetter__ 'cvvResultCode', ->
+      messages = @messages['processor.cvv_result_code'] or @messages['gateway.cvv_result_code']
+      messages[0].key if messages and messages[0]
   
 module.exports = Transaction

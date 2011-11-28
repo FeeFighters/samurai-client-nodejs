@@ -24,9 +24,9 @@ module.exports.createTestPaymentMethod = (callback) ->
     'redirect_url':               'http://yourdomain.com/anywhere',
     'merchant_key':               samurai.Connection.config.merchant_key,
     'sandbox':                    true,
-    'custom':                     'custom'
-    'credit_card[first_name]':    'FirstName',
-    'credit_card[last_name]':     'LastName',
+    'custom':                     'custom',
+    'credit_card[first_name]':    'John',
+    'credit_card[last_name]':     'Smith',
     'credit_card[address_1]':     '1000 1st Av',
     'credit_card[address_2]':     '',
     'credit_card[city]':          'Chicago',
