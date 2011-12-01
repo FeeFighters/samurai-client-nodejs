@@ -133,7 +133,7 @@ class Transaction
 
   # -- Helpers --
   isSuccess: ->
-    @attributes.processor_response?.success
+    @attributes.processor_response?.success == true
 
   isFailed: ->
     return !@isSuccess()
@@ -213,7 +213,7 @@ class Transaction
   processResponseMessages: (response) ->
     # find messages array
     messages = @extractMessagesFromResponse(response)
-    @messages = {}
+    @messages = messages
     @errors = {}
     
     for message in messages
@@ -225,14 +225,9 @@ class Transaction
           @errors[message.context].push m
         else
           @errors[message.context] = [m]
-      else
-        if message.context of @messages
-          @messages[message.context].push m
-        else
-          @messages[message.context] = [m]
 
   # -- Accessors --
   createAttrAliases: ->
     this.__defineGetter__ 'token', -> @attributes.transaction_token
-  
+
 module.exports = Transaction
