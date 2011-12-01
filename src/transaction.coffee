@@ -133,7 +133,7 @@ class Transaction
 
   # -- Helpers --
   isSuccess: ->
-    @attributes.processor_response?.success == true
+    @attributes.processor_response?.success is true
 
   isFailed: ->
     return !@isSuccess()
@@ -144,7 +144,11 @@ class Transaction
   # and the current transaction object to the `callback`.
   createResponseHandler: (callback) ->
     (err, response) =>
+      #console.log '---- err is', err
+      #console.log '---- response is', response
+      #console.log '---- snip -----------------'
       if err
+        @updateAttributes(response.error) if response?.error?
         @attributes.processor_response?.success = false
       else
         @updateAttributes(response.transaction) if response?.transaction?
@@ -213,7 +217,7 @@ class Transaction
   processResponseMessages: (response) ->
     # find messages array
     messages = @extractMessagesFromResponse(response)
-    @messages = messages
+    @messages = {}
     @errors = {}
     
     for message in messages
@@ -225,6 +229,11 @@ class Transaction
           @errors[message.context].push m
         else
           @errors[message.context] = [m]
+      else
+        if message.context of @messages
+          @messages[message.context].push m
+        else
+          @messages[message.context] = [m]
 
   # -- Accessors --
   createAttrAliases: ->

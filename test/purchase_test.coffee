@@ -21,17 +21,17 @@ vows
   .addBatch
     'Failed purchase due to validation error':
       topic: ->
-        createTestPaymentMethod (token) =>
-          Processor.purchase(
-            token,
-            1.0,
-            {},
-            this.callback)
-        , { 'credit_card[zip]': '' }
+        createTestPaymentMethod(
+          (token) =>
+            Processor.purchase(
+              token,
+              1.0,
+              {},
+              this.callback)
+          'credit_card[zip]': '')
         return
 
       'the processor response should be an error': (err, transaction) ->
-        console.log JSON.stringify transaction
         assert.equal transaction.isSuccess(), false
 
     'When a successful purchase is created':

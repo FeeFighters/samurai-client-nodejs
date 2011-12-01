@@ -102,6 +102,7 @@ class PaymentMethod
     (err, response) =>
       if err
         @attributes.success = false
+        @updateAttributes(response.error) if response.error?
       else
         @updateAttributes(response.payment_method) if response.payment_method?
 
