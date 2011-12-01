@@ -63,15 +63,8 @@ class Processor
   # Creates a new response handler that returns the `Transaction`
   # object, associated with the request.
   createResponseHandler: (callback) ->
-    (err, response) =>
-      transaction = new Transaction()
-      if err
-        transaction.attributes?.processor_response?.success = false
-      else
-        transaction.updateAttributes(response.transaction)
-      transaction.processResponseMessages(response)
-
-      callback?(err, transaction)
+    transaction = new Transaction()
+    transaction.createResponseHandler(callback)
 
   # Returns the API endpoint that should be used for `method`.
   pathFor: (method) ->

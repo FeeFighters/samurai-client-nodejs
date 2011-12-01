@@ -1,6 +1,7 @@
 https = require 'https'
 querystring = require 'querystring'
 samurai = require('../..')
+{ merge } = require '../../lib/helpers'
 
 samurai.setup
   sandbox:           true
@@ -10,32 +11,34 @@ samurai.setup
   processor_token:   process.env['PROCESSOR_TOKEN']   || '5a0e1ca1e5a11a2997bbf912'
 
 module.exports = samurai
-module.exports.createTestPaymentMethod = (callback) ->
+module.exports.createTestPaymentMethod = (callback, querydata={}) ->
   options =
-    host: 'api.samurai.feefighters.com',
-    port: 443,
-    path: '/v1/payment_methods',
-    method: 'POST',
+    host: 'api.samurai.feefighters.com'
+    port: 443
+    path: '/v1/payment_methods'
+    method: 'POST'
     headers:
-      'Accept':        'application/json',
-      'Content-Type':  'application/x-www-form-urlencoded',
+      'Accept':        'application/json'
+      'Content-Type':  'application/x-www-form-urlencoded'
 
-  data = querystring.stringify
-    'redirect_url':               'http://yourdomain.com/anywhere',
-    'merchant_key':               samurai.Connection.config.merchant_key,
-    'sandbox':                    true,
-    'custom':                     'custom',
-    'credit_card[first_name]':    'John',
-    'credit_card[last_name]':     'Smith',
-    'credit_card[address_1]':     '1000 1st Av',
-    'credit_card[address_2]':     '',
-    'credit_card[city]':          'Chicago',
-    'credit_card[state]':         'IL',
-    'credit_card[zip]':           '10101',
-    'credit_card[card_number]':   '4111111111111111',
-    'credit_card[cvv]':           '111',
-    'credit_card[expiry_month]':  '05',
+  data =
+    'redirect_url':               'http://yourdomain.com/anywhere'
+    'merchant_key':               samurai.Connection.config.merchant_key
+    'sandbox':                    true
+    'custom':                     'custom'
+    'credit_card[first_name]':    'FirstName'
+    'credit_card[last_name]':     'LastName'
+    'credit_card[address_1]':     '1000 1st Av'
+    'credit_card[address_2]':     ''
+    'credit_card[city]':          'Chicago'
+    'credit_card[state]':         'IL'
+    'credit_card[zip]':           '10101'
+    'credit_card[card_number]':   '4111111111111111'
+    'credit_card[cvv]':           '111'
+    'credit_card[expiry_month]':  '05'
     'credit_card[expiry_year]':   '2014'
+
+  data = querystring.stringify merge(data, querydata)
 
   req = https.request(
     options,

@@ -19,6 +19,21 @@ createTestPurchase = (amount, callback) ->
 vows
   .describe('Processing purchases')
   .addBatch
+    'Failed purchase due to validation error':
+      topic: ->
+        createTestPaymentMethod(
+          (token) =>
+            Processor.purchase(
+              token,
+              1.0,
+              {},
+              this.callback)
+          'credit_card[card_number]': '')
+        return
+
+      'the processor response should be an error': (err, transaction) ->
+        assert.equal transaction.isSuccess(), false
+
     'When a successful purchase is created':
       topic: ->
         createTestPurchase 1.0, this.callback
