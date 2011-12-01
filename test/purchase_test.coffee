@@ -42,6 +42,12 @@ vows
       'the processor response should be successful': (err, transaction) ->
         assert.equal transaction.isSuccess(), true
 
+      'we should be able to read the AVS result code ': (err, transaction) ->
+        assert.equal transaction.avsResultCode, 'Y'
+
+      'we should be able to read the CVV result code ': (err, transaction) ->
+        assert.isNotNull transaction.cvvResultCode
+
     'When a recent transaction is voided':
       topic: ->
         createTestPurchase 1.0, (err, transaction) =>
