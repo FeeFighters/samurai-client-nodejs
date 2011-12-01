@@ -1,7 +1,6 @@
 {extend}                 = require './helpers'
 {get, post, put, config} = require './connection'
 Transaction              = require './transaction'
-util = require 'util'
 
 class Processor
   # -- Class Methods --

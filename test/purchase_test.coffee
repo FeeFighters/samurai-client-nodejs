@@ -28,7 +28,7 @@ vows
               1.0,
               {},
               this.callback)
-          'credit_card[zip]': '')
+          'credit_card[card_number]': '')
         return
 
       'the processor response should be an error': (err, transaction) ->

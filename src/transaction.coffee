@@ -144,9 +144,6 @@ class Transaction
   # and the current transaction object to the `callback`.
   createResponseHandler: (callback) ->
     (err, response) =>
-      #console.log '---- err is', err
-      #console.log '---- response is', response
-      #console.log '---- snip -----------------'
       if err
         @updateAttributes(response.error) if response?.error?
         @attributes.processor_response?.success = false
@@ -220,6 +217,17 @@ class Transaction
     @messages = {}
     @errors = {}
     
+    # Sort the messages so that more-critical/relevant ones appear first,
+    # since only the first error is added to a field
+    order = ['is_blank', 'not_numeric', 'too_short', 'too_long', 'failed_checksum']
+    messages = messages.sort (a, b) ->
+      a = order.indexOf(a.key)
+      b = order.indexOf(b.key)
+      a = 0 if a is -1
+      b = 0 if b is -1
+
+      if a < b then -1 else if a > b then 1 else 0
+
     for message in messages
       m = new Message(message.subclass, message.context, message.key, message.$t)
       message.context = 'system.general' if message.context is ''
