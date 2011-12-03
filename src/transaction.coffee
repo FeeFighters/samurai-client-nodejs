@@ -31,9 +31,7 @@ class Transaction
   # fetch a transaction, always use its reference id.
   @find: (referenceId, callback) ->
     transaction = new Transaction(reference_id: referenceId)
-    get transaction.pathFor('show'), null, (err, response) ->
-      transaction.updateAttributes(response.transaction)
-      callback?(err, transaction)
+    get transaction.pathFor('show'), null, transaction.createResponseHandler(callback)
 
   constructor: (@attributes={}) ->
     @errors = {}

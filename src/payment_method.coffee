@@ -49,9 +49,7 @@ class PaymentMethod
   # Retrieves the payment method identified by `token`.
   @find: (token, callback) ->
     paymentMethod = new PaymentMethod(payment_method_token: token)
-    get paymentMethod.pathFor('show'), null, (err, response) ->
-      paymentMethod.updateAttributes(response.payment_method)
-      callback?(err, paymentMethod)
+    get paymentMethod.pathFor('show'), null, paymentMethod.createResponseHandler(callback)
     paymentMethod
 
   # Creates a new payment method object, but does not save it to the
