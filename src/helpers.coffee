@@ -32,3 +32,9 @@ camelize = exports.camelize = (string) ->
 # E.g.: 'camelCasedString' -> 'camel_case_string'
 underscore = exports.underscore = (string) ->
   string.replace(/([A-Z])/g, (match) -> "_" + match.toLowerCase())
+
+# Returns true if an object is empty.
+isEmptyObject = exports.isEmptyObject = (object) ->
+  for own k, v of object
+    return false
+  return true

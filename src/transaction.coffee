@@ -2,6 +2,7 @@ Message = require './message'
 
 { extend
 , camelize
+, isEmptyObject
 } = require './helpers'
 
 { get
@@ -135,6 +136,9 @@ class Transaction
 
   isFailed: ->
     return !@isSuccess()
+
+  hasErrors: ->
+    !isEmptyObject(@errors)
 
   # Creates a response handler that parses the Samurai response for
   # messages (info or error) and updates the current transaction's

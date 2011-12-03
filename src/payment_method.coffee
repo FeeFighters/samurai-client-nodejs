@@ -2,6 +2,7 @@ Message  = require './message'
 
 { extend
 , camelize
+, isEmptyObject
 } = require './helpers'
 
 { get
@@ -84,6 +85,8 @@ class PaymentMethod
       put  @pathFor('update'), { payment_method: @sanitizedAttributes() }, @createResponseHandler(callback)
 
   # -- Helpers --
+  hasErrors: ->
+    !isEmptyObject(@errors)
   
   # Makes sure that the payment method attributes we send to the Samurai API are part
   # of the KNOWN_ATTRIBUTES array.
