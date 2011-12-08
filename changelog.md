@@ -1,6 +1,10 @@
 ## Changelog
 
-### 0.2.2 (latest)
+### 0.2.3 (latest)
+
+ + Added view helpers for rendering transaction errors and payment forms.
+
+### 0.2.2
 
  + Added hasErrors() helper to Transaction and PaymentMethod classes.
  + Fixed an issue with Transaction and PaymentMethod forgetting to
