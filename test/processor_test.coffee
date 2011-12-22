@@ -18,7 +18,7 @@ vows
             processor.purchase(token,
               1.0,
               {
-                descriptor: 'A test purchase',
+                description: 'A test purchase',
                 custom: 'optional custom data',
                 billing_reference: 'ABC123',
                 customer_reference: 'Customer (123)'

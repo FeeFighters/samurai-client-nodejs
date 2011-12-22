@@ -18,7 +18,7 @@ class Transaction
     ,  'type'
     ,  'payment_method_token'
     ,  'currency_code'
-    ,  'descriptor'
+    ,  'description'
     ,  'custom'
     ,  'customer_reference'
     ,  'billing_reference'
