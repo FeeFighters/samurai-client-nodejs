@@ -33,7 +33,9 @@
   , "eco":            "1.1.x"
   }
 , "devDependencies": 
-  { "vows":  "0.5.x" }
+  { "mocha":  "*"
+  , "should": "*"
+  }
 , "engines" : { "node" : ">=0.4.1" }
 , "keywords": ["payments", "payment gateway", "payment processing", "samurai", "feefighters"]
 , "scripts": 

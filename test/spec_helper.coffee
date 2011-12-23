@@ -1,7 +1,7 @@
 https = require 'https'
 querystring = require 'querystring'
-samurai = require('../..')
-{ merge } = require '../../lib/helpers'
+samurai = require('..')
+{ merge } = require '../lib/helpers'
 
 samurai.setup
   sandbox:           true
@@ -22,9 +22,9 @@ module.exports.createTestPaymentMethod = (callback, querydata={}) ->
       'Content-Type':  'application/x-www-form-urlencoded'
 
   data =
-    'redirect_url':               'http://yourdomain.com/anywhere'
-    'merchant_key':               samurai.Connection.config.merchant_key
     'sandbox':                    true
+    'redirect_url':               'http://test.host',
+    'merchant_key':               samurai.Connection.config.merchant_key
     'custom':                     'custom'
     'credit_card[first_name]':    'FirstName'
     'credit_card[last_name]':     'LastName'

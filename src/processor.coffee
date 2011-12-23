@@ -22,6 +22,7 @@ class Processor
     new Processor(@processorToken)
 
   constructor: (@processorToken) ->
+    @token = @processorToken
 
   # -- Methods --
 
@@ -38,6 +39,10 @@ class Processor
   #
   # Returns a Samurai.Transaction containing the processor's response.
   purchase: (paymentMethodToken, amount, options = {}, callback) ->
+    if typeof options is 'function'
+      callback = options
+      options = {}
+
     extend options, payment_method_token: paymentMethodToken, amount: amount
     post @pathFor('purchase'), @prepareTransactionData(options), @createResponseHandler(callback)
 
@@ -55,6 +60,10 @@ class Processor
   #
   # Returns a Samurai.Transaction containing the processor's response.
   authorize: (paymentMethodToken, amount, options = {}, callback) ->
+    if typeof options is 'function'
+      callback = options
+      options = {}
+
     extend options, payment_method_token: paymentMethodToken, amount: amount
     post @pathFor('authorize'), @prepareTransactionData(options), @createResponseHandler(callback)
 

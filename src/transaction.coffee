@@ -35,6 +35,7 @@ class Transaction
     get transaction.pathFor('show'), null, transaction.createResponseHandler(callback)
 
   constructor: (@attributes={}) ->
+    @attributes = extend({}, @attributes)
     @errors = {}
     @messages = {}
     @createAttrAliases()

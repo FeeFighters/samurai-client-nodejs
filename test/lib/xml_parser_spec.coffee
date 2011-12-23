@@ -1,6 +1,5 @@
-vows = require 'vows'
-assert = require 'assert'
-xml = require '../lib/xml_parser'
+should = require 'should'
+xml = require '../../lib/xml_parser'
 
 sampleSamuraiXML = """
 <payment_method>
@@ -64,13 +63,6 @@ sampleSamuraiJSON =
     zip: '53211',
     country: ''
   
-vows
-  .describe('XmlParser')
-  .addBatch
-    'when parsing a sample samurai XML response':
-      topic: ->
-        JSON.stringify xml.parse(sampleSamuraiXML)
-
-      'the result will be equivalent to the same JSON response': (topic) ->
-        assert.equal topic, JSON.stringify(sampleSamuraiJSON)
-  .export(module)
+describe 'XmlParser', ->
+  it 'should parse a sample samurai XML response into a plain object', ->
+    JSON.stringify(xml.parse(sampleSamuraiXML)).should.equal JSON.stringify(sampleSamuraiJSON)
