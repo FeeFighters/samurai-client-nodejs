@@ -19,24 +19,25 @@ task 'build', 'Compile Samurai source files', ->
 task 'watch', 'Recompile CoffeeScript source files when modified', ->
   build true
 
-task 'test', 'Run mocha specs', ->
-	files = [ 'helpers_spec.coffee'
-					, 'xml_parser_spec.coffee'
-					, 'message_spec.coffee'
-					, 'payment_method_spec.coffee'
-					, 'processor_spec.coffee'
-					, 'transaction_spec.coffee'
-					]
+source_files = [ 'helpers_spec.coffee'
+				       , 'xml_parser_spec.coffee'
+				       , 'message_spec.coffee'
+				       , 'payment_method_spec.coffee'
+				       , 'processor_spec.coffee'
+				       , 'transaction_spec.coffee'
+				       ]
 
-	for file in files
+task 'test', 'Run mocha specs', ->
+	for file in source_files
 		exec "node_modules/mocha/bin/mocha -r should -R spec --slow 5000 --timeout 20000 test/lib/#{file}",
 			(err, stdout, stderr) ->
 				print stdout if stdout?
 				print stderr if stderr?
 
 task 'test-ci', 'Run mocha specs in CI', ->
-	# TODO: no xunit reporter in mocha, yet
-  #exec 'node_modules/vows/bin/vows --xunit test/*.coffee > results.xml',
-		#(err, stdout, stderr) ->
-			#print stdout if stdout?
-			#print stderr if stderr?
+  exec "rm -f results.tap", ->
+  	for file in source_files
+  		exec "node_modules/mocha/bin/mocha -R tap -r should --slow 5000 --timeout 20000 test/lib/#{file} >> results.tap",
+  			(err, stdout, stderr) ->
+  				print stdout if stdout?
+  				print stderr if stderr?
