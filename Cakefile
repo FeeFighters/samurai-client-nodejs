@@ -34,7 +34,7 @@ task 'test', 'Run mocha specs', ->
         print stderr if stderr?
 
 task 'test-ci', 'Run mocha specs in CI', ->
-	exec "node_modules/mocha/bin/mocha -R XUnit -r should --slow 5000 --timeout 20000 test/lib/* >& results.xml",
+	exec "node_modules/mocha/bin/mocha -R xunit -r should --slow 5000 --timeout 20000 test/lib/* >& results.xml",
 		(err, stdout, stderr) ->
 			print stdout if stdout?
 			print stderr if stderr?
