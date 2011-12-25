@@ -33,7 +33,7 @@
   , "eco":            "1.1.x"
   }
 , "devDependencies": 
-  { "mocha":  "*"
+  { "mocha":  "git://github.com/FeeFighters/mocha.git#xunit_reporter"
   , "should": "*"
   }
 , "engines" : { "node" : ">=0.4.1" }
