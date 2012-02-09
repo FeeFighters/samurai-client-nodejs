@@ -1,6 +1,6 @@
 { "name":        "samurai"
 , "description": "Samurai payment gateway API client module for Node.js"
-, "version":     "0.2.4"
+, "version":     "0.2.5"
 , "author":      "FeeFighters <samurai@feefighters.com>"
 , "homepage":    "https://samurai.feefighters.com"
 , "repository": 
