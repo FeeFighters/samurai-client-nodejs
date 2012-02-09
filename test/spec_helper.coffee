@@ -4,7 +4,6 @@ samurai = require('..')
 { merge } = require '../lib/helpers'
 
 samurai.setup
-  sandbox:           true
   site:              process.env['SITE']              || 'https://api.samurai.feefighters.com/v1/',
   merchant_key:      process.env['MERCHANT_KEY']      || 'a1ebafb6da5238fb8a3ac9f6',
   merchant_password: process.env['MERCHANT_PASSWORD'] || 'ae1aa640f6b735c4730fbb56',
@@ -22,7 +21,6 @@ module.exports.createTestPaymentMethod = (callback, querydata={}) ->
       'Content-Type':  'application/x-www-form-urlencoded'
 
   data =
-    'sandbox':                    true
     'redirect_url':               'http://test.host',
     'merchant_key':               samurai.Connection.config.merchant_key
     'custom':                     'custom'

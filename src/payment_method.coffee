@@ -27,7 +27,6 @@ class PaymentMethod
     ,  'expiry_month'
     ,  'expiry_year'
     ,  'custom'
-    ,  'sandbox'
     ]
 
   # -- Class Methods --
@@ -58,7 +57,6 @@ class PaymentMethod
   # object to save it.
   constructor: (@attributes = {}) ->
     @attributes = extend({}, @attributes)
-    extend(@attributes, sandbox: true) if config.sandbox
       
     @isNew = if @attributes.payment_method_token? then false else true
     @errors = {}
