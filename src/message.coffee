@@ -69,4 +69,4 @@ module.exports = class Message
   # the `text` attribute (which could be blank).
   description: ->
     key = [@subclass, @context, @key].join(' ')
-    DEFAULT_RESPONSE_MAPPINGS[key] or @text
+	(@text? || @text!='') ? @text : DEFAULT_RESPONSE_MAPPINGS[key]
