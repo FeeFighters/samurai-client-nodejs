@@ -95,9 +95,9 @@ module.exports = do ->
       headers:
         'Authorization': authHeader,
         'Accept':        'application/json',
-        'Content-Type':  'application/x-www-form-urlencoded',
+        'Content-Type':  'application/json',
 
-    data = querystring.stringify flattenObject(extend(extend({}, defaultData), data))
+    data = JSON.stringify extend(extend({}, defaultData), data)
     options.headers['Content-Length'] = data.length
 
     req = https.request(options, handleResponse(callback, { options: options, data: data }))

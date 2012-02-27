@@ -184,7 +184,7 @@ class PaymentMethod
       if a < b then -1 else if a > b then 1 else 0
 
     for message in messages
-      m = new Message(message.subclass, message.context, message.key, message.$t)
+      m = new Message(message.subclass, message.context, message.key, message.$t || message.text)
       message.context = 'system.general' if message.context is ''
 
       if message.subclass is 'error'
