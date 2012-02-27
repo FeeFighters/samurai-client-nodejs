@@ -12,6 +12,7 @@ module.exports = do ->
   defaultData = {}
   config =
     site: 'https://api.samurai.feefighters.com/v1/'
+    debug: false
 
   # Sets up the default connection parameters for all requests to the Samurai API.
   # Parameters are passed in a single object. The available parameters are:
@@ -57,15 +58,18 @@ module.exports = do ->
         body += chunk
 
       res.on 'end', ->
-        #console.log '-- raw response headers: ', res.headers
-        #console.log '-- raw response body: ', body
+        if config.debug
+          console.log '\n\n-- REQUEST options:'
+          console.log r.options
+          console.log '-- REQUEST data:'
+          console.log r.data
+          console.log '-- RESPONSE headers: '
+          console.log res.headers
+          console.log '-- RESPONSE body: '
+          console.log body
         err = errorFromStatus(res.statusCode)
-        #if err
-          #console.log '-- [err] '.red + 'status:', res.statusCode
-          #console.log '-- [err] '.red + 'request options:', r.options
-          #console.log '-- [err] '.red + 'request data:', r.data
-          #console.log '-- [err] '.red + 'raw response headers:', res.headers
-          #console.log '-- [err] '.red + 'raw response body:', body
+        if err and config.debug
+          console.log '-- [err] '.red + 'status:', res.statusCode
 
         contentType = v for k, v of res.headers when k.toLowerCase() is 'content-type'
 
@@ -97,8 +101,6 @@ module.exports = do ->
 
     data = querystring.stringify flattenObject(extend(extend({}, defaultData), data))
     options.headers['Content-Length'] = data.length
-    #console.log ' -- sending request with options', options
-    #console.log ' -- should send data', data
 
     req = https.request(options, handleResponse(callback, { options: options, data: data }))
     req.write(data) if data?

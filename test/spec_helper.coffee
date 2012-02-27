@@ -9,6 +9,7 @@ samurai.setup
   merchant_key:      process.env['MERCHANT_KEY']      || 'a1ebafb6da5238fb8a3ac9f6',
   merchant_password: process.env['MERCHANT_PASSWORD'] || 'ae1aa640f6b735c4730fbb56',
   processor_token:   process.env['PROCESSOR_TOKEN']   || '5a0e1ca1e5a11a2997bbf912'
+  debug:             true
 
 module.exports = samurai
 module.exports.createTestPaymentMethod = (callback, querydata={}) ->
