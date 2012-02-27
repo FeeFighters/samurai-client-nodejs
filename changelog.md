@@ -1,6 +1,9 @@
 ## Changelog
 
-### 0.2.3 (latest)
+### 0.2.5 (latest)
+ + Removed sandbox parameter.
+
+### 0.2.3
 
  + Added view helpers for rendering transaction errors and payment forms.
 
